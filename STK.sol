@@ -8,3 +8,8 @@ contract STK is ERC20, Ownable {
     constructor() ERC20("StakeToken", "STK") {
         _mint(msg.sender, 100000 * 10 ** decimals());
     }
+
+    function mint(address to, uint256 amount) public  {
+        _mint(to, amount);
+    }
+}
