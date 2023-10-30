@@ -198,14 +198,3 @@ contract Staking{
         RWTS.mint(msg.sender,rewardsTransfer);  
         emit RewardsClaim(rewardsTransfer , block.timestamp);
     }
-    //claim NFT function
-    function claimNFTs() public validateStaker{
-        require(block.timestamp > stakeinfo[msg.sender].lastNFTclaimTime.add(30 minutes),"Time is not completed for claiming NFT");
-        uint256 maxMintableNftnumber = stakeinfo[msg.sender].tierLevel.add(1);
-        for(uint256 i=0; i < maxMintableNftnumber; i++){
-            RFT.safeMint(msg.sender);
-        }   
-        stakeinfo[msg.sender].lastNFTclaimTime =  block.timestamp;
-        emit claimNft(maxMintableNftnumber,block.timestamp);    
-    }  
-}
