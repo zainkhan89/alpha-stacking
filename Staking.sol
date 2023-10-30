@@ -188,13 +188,24 @@ contract Staking{
         }
         emit StakeWithdraw(unStakeAmount,rewardsTransfer , block.timestamp);
     }
+
     // claim rewards function
     function claimRewards() public validateStaker{
         require(block.timestamp >= stakeinfo[msg.sender].startTime.add(7 minutes) , "staking not completed");
 
         uint256 rewardsTransfer = MyRewardsUnTillToday(msg.sender);
         stakeinfo[msg.sender].lastTimeClaim = block.timestamp;
-        
+            //claim NFT function
+    function claimNFTs() public validateStaker{
+        require(block.timestamp > stakeinfo[msg.sender].lastNFTclaimTime.add(30 minutes),"Time is not completed for claiming NFT");
+        uint256 maxMintableNftnumber = stakeinfo[msg.sender].tierLevel.add(1);
+        for(uint256 i=0; i < maxMintableNftnumber; i++){
+            RFT.safeMint(msg.sender);
+        }   
+        stakeinfo[msg.sender].lastNFTclaimTime =  block.timestamp;
+        emit claimNft(maxMintableNftnumber,block.timestamp);    
+    }  
+}
         RWTS.mint(msg.sender,rewardsTransfer);  
         emit RewardsClaim(rewardsTransfer , block.timestamp);
     }
